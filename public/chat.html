@@ -3,8 +3,21 @@
         <script src="/socket.io/socket.io.js"></script>
         <script>
             var socket = io();
+            
+            function sendMessage() {
+                var msgBox = document.getElementById('composeBox');
+                socket.emit('text message', { message: msgBox.value});
+            };
+
+            socket.on('text message', function(message) {
+                var messageWindow = document.getElementById('messageWindow');
+                messageWindow.value = messageWindow.value + '\n' + message.message;
+            });
         </script>
     </head>
     <body>
+        <textarea id="messageWindow"></textarea><br>
+        <textarea id="composeBox"></textarea>
+        <button onclick="sendMessage()">Send</button>
     </body>
 </html>
