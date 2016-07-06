@@ -7,6 +7,7 @@ function sendMessage() {
 
 socket.on('text message', function(message) {
     var messageWindow = $('#messageWindow');
-    messageWindow.val(messageWindow.val() + '\n' + message.message);
+    messageWindow.val(messageWindow.val() + '\n' + message.from + ": " + message.message);
+
 });
 

@@ -12,9 +12,9 @@ io.on('connection', function(socket) {
         // Need to broadcast this to everyone else somehow
     });
 
-    socket.on('text message', function(message) {
-        console.log("Received message:" +message.message);
-        io.emit('text message', message);
+    socket.on('text message', function(textMsg) {
+        console.log("Received message:" +textMsg.message);
+        io.emit('text message', {from: socket.nick, message: textMsg.message});
     });
 });
 
