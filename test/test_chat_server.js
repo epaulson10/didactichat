@@ -2,6 +2,16 @@ var should = require('should');
 var io = require('socket.io-client');
 var serverURL = "http://localhost:3000";
 
+var app;
+
+before(function() {
+    app = require('../bin/wwwModule.js');
+    app.startServer();
+});
+after (function() {
+    app.server.close();
+});
+
 describe('Basic tests', function() {
     it('Should connect clients to the server', function(done) {
         var client = io(serverURL, {multiplex: false});
