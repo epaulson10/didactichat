@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/epaulson10/didactichat.svg?branch=master)](https://travis-ci.org/epaulson10/didactichat)
 # didactichat
 Copyright (c) 2016 Erik Paulson
 
