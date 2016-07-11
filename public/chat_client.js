@@ -12,14 +12,19 @@ function sendNick() {
 };
 
 socket.on('text message', function(message) {
-    var messageWindow = $('#messageWindow');
-    messageWindow.val(messageWindow.val() + '\n' + message.from + ": " + message.message);
-
+    var messageList = $('#messageList');
+    addTextToMsgWindow(message.from + ": " + message.message);
 });
 
 socket.on('NICK', function(nickChange) {
-    var messageWindow = $('#messageWindow');
     var changeStr = nickChange.oldNick + " is now known as " + nickChange.newNick + ".";
-    messageWindow.val(messageWindow.val() + '\n' + changeStr);
+    addTextToMsgWindow(changeStr);
 });
+
+function addTextToMsgWindow(text) {
+    var msgList = $('#messageList');
+    var msgDiv = $('#messageDiv');
+    msgList.append("<li>" + text + "</li>");
+    msgDiv.scrollTop(msgDiv.prop('scrollHeight'));
+}
 

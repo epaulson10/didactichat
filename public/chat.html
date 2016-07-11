@@ -3,9 +3,13 @@
     <script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="chat_client.js"></script>
+    <link rel="stylesheet" href="style.css"></link>
     </head>
     <body>
-        <textarea id="messageWindow"></textarea><br>
+        <div id="messageDiv">
+            <ul id="messageList">
+            </ul>
+        </div>
         <textarea id="composeBox"></textarea>
         <button onclick="sendMessage()">Send</button>
         <input id="nickBox"></input>

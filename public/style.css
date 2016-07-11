@@ -1,0 +1,7 @@
+#messageDiv {
+    overflow-y: auto;
+    height: 600;
+    width: 600;
+    border-style:solid;
+    word-wrap: break-word;
+}
