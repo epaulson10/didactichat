@@ -8,8 +8,9 @@ io.on('connection', function(socket) {
     socket.nick = "Anonymous";
 
     socket.on('NICK', function(nickname) {
+        var old = socket.nick;
         socket.nick = nickname;
-        // Need to broadcast this to everyone else somehow
+        io.emit('NICK', {oldNick: old, newNick: nickname});
     });
 
     socket.on('text message', function(textMsg) {
