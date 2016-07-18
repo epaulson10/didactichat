@@ -1,5 +1,4 @@
-
-var name = prompt("Please enter your nickname");
+var socket = io();
 
 function sendMessage() {
     var msgBox = $("#composeBox");
