@@ -1,7 +1,29 @@
 #messageDiv {
     overflow-y: auto;
-    height: 600;
-    width: 600;
     border-style:solid;
     word-wrap: break-word;
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+#chatDiv {
+    height: 600;
+    width: 600;
+}
+
+#composeDiv {
+    width: 100%;
+    height: 50px;
+    display:inline-block;
+}
+
+#controlDiv {
+    width: 100%;
+    height: 50px;
+}
+
+#composeBox {
+    width:90%;
+    display:inline-block;
 }

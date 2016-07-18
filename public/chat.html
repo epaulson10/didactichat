@@ -6,13 +6,19 @@
     <link rel="stylesheet" href="style.css"></link>
     </head>
     <body>
-        <div id="messageDiv">
-            <ul id="messageList">
-            </ul>
+        <div id="chatDiv">
+            <div id="messageDiv">
+                <ul id="messageList">
+                </ul>
+            </div>
+            <div id="composeDiv">
+                <input type="text" id="composeBox"></input>
+                <button id="sendButton" onclick="sendMessage()">Send</button>
+            </div>
+        <div id="controlDiv">
+            <input id="nickBox"></input>
+            <button onclick="sendNick()">Change Nickname</button>
         </div>
-        <textarea id="composeBox"></textarea>
-        <button onclick="sendMessage()">Send</button>
-        <input id="nickBox"></input>
-        <button onclick="sendNick()">Change Nickname</button>
+        </div>
     </body>
 </html>

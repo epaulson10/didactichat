@@ -1,8 +1,10 @@
-var socket = io();
+
+var name = prompt("Please enter your nickname");
 
 function sendMessage() {
     var msgBox = $("#composeBox");
     socket.emit('text message', { message: msgBox.val()});
+    msgBox.val("");
 };
 
 function sendNick() {
@@ -28,3 +30,14 @@ function addTextToMsgWindow(text) {
     msgDiv.scrollTop(msgDiv.prop('scrollHeight'));
 }
 
+$(document).on("keydown", "#composeBox", function(event) {
+    if (event.keyCode == 13) {
+        sendMessage();
+    }
+});
+
+$(document).on("keydown", "#nickBox", function(event) {
+    if (event.keyCode == 13) {
+        sendNick();
+    }
+});
