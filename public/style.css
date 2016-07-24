@@ -9,7 +9,13 @@
 
 #chatDiv {
     height: 600;
-    width: 600;
+    width: 80%;
+    float: left;
+}
+
+#roomListDiv {
+    float: left;
+    width: 20%;
 }
 
 #composeDiv {

@@ -2,14 +2,16 @@
     <head>
     <script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="chat_client.js"></script>
-    <link rel="stylesheet" href="style.css"></link>
+    <script src="/chat_client.js"></script>
+    <link rel="stylesheet" href="/style.css"></link>
     </head>
     <body>
+        <div id="roomListDiv">
+            <ul id="roomList">
+            </ul>
+        </div>
         <div id="chatDiv">
             <div id="messageDiv">
-                <ul id="messageList">
-                </ul>
             </div>
             <div id="composeDiv">
                 <input type="text" id="composeBox"></input>
@@ -18,6 +20,7 @@
         <div id="controlDiv">
             <input id="nickBox"></input>
             <button onclick="sendNick()">Change Nickname</button>
+            <button onclick="createRoom()">Create room</button>
         </div>
         </div>
     </body>
