@@ -18,6 +18,8 @@ describe('Basic tests', function() {
         client.on('connect', function() {
             var client2 = io(serverURL, {multiplex: false});
             client2.on('connect', function() {
+                client.disconnect();
+                client2.disconnect();
                 done();
             });
         });
@@ -27,14 +29,18 @@ describe('Basic tests', function() {
 describe('Chat Protocol Tests', function() {
     var client1;
     var client2;
+    var joinRequest = {room: "test"};
     var msgString = 'Hello world!';
     // Set up some clients to send messages
     before(function(done) {
         client1 = io(serverURL, {multiplex: false});
         client1.on('connect', function() {
+            client1.emit('join', joinRequest);
             client2 = io(serverURL, {multiplex: false});
             client2.on('connect', function() {
-                done();
+                client2.emit('join', joinRequest);
+                // This delay is needed, otherwise the server won't receive the join in time
+                setTimeout(done, 300);
             });
         });
     });
@@ -47,9 +53,10 @@ describe('Chat Protocol Tests', function() {
     it('should broadcast text messages from one user to another', function(done) {
         client2.on('text message', function(data) {
             should(data).have.property('message').which.is.equal('Hello world!');
+            should(data).have.property('room').which.is.equal(joinRequest.room);
             done();
         });
-        client1.emit('text message', {message: msgString});
+        client1.emit('text message', {message: msgString, room: joinRequest.room});
 
     });
 
@@ -62,5 +69,5 @@ describe('Chat Protocol Tests', function() {
 
         client1.emit('NICK', 'Steve');
     });
-        
+
 });
