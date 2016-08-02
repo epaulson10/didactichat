@@ -1,6 +1,7 @@
 var http = require('http');
 var chat = {};
 var io = require('socket.io')();
+var chatLog = require('./chat_log.js');
 chat.io = io;
 
 var roomList = [];
@@ -19,9 +20,14 @@ io.on('connection', function(socket) {
 
     socket.on('text message', function(textMsg) {
         console.log("Received message: \"" +textMsg.message + "\" for room: " + textMsg.room);
+        var msgObj = {from: socket.nick, message: textMsg.message, room: textMsg.room};
         if(textMsg.room){
-            io.sockets.in(textMsg.room).emit('text message', {from: socket.nick, message: textMsg.message, room: textMsg.room});
+            io.sockets.in(textMsg.room).emit('text message', msgObj);
         }
+
+        // TODO: Decide if I care about time stamps
+        msgObj.time = new Date().getTime();
+        chatLog.addMessage(msgObj);
     });
 
     socket.on('join', function (joinRequest) {

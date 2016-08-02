@@ -67,8 +67,18 @@ socket.on('room list', function(roomList) {
         } else {
             $('#' + roomList[i]).hide();
         }
+        getMessagesForRoom(roomList[i], 20);
     }
 });
+
+function getMessagesForRoom(room, numMessages) {
+    $.get("/chat/log", {numMessages: numMessages, room: room}, 
+        function(messageArr) {
+            for (var i = 0; i < messageArr.length; i++) {
+                addTextToMsgWindow(messageArr[i].from + ": " + messageArr[i].message, room);
+            }
+        });
+};
 
 function addTextToMsgWindow(text, room) {
     var msgList;
