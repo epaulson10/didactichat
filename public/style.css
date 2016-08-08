@@ -1,3 +1,16 @@
+.clickable {
+    cursor: pointer;
+}
+
+.leftFloat {
+    float: left;
+}
+
+.rightFloat {
+    float: right;
+}
+
+
 #messageDiv {
     overflow-y: auto;
     border-style:solid;
@@ -16,6 +29,7 @@
 #roomListDiv {
     float: left;
     width: 20%;
+    overflow-wrap: break-word;
 }
 
 #composeDiv {
@@ -32,4 +46,9 @@
 #composeBox {
     width:90%;
     display:inline-block;
+}
+
+#roomListHeader {
+    display:inline-block;
+    margin-right: 5px;
 }

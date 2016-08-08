@@ -8,11 +8,16 @@ var roomList = [];
 
 io.on('connection', function(socket) {
     console.log("Someone connected");
-    socket.nick = "Anonymous";
+    socket.nick = null;
     socket.room = "chat";
     socket.emit('room list', roomList);
 
     socket.on('NICK', function(nickname) {
+        // Don't let someone change their nickname to garbage
+        if (nickname == undefined || nickname === ""
+            || nickname === null) {
+                return;
+        }
         var old = socket.nick;
         socket.nick = nickname;
         io.emit('NICK', {oldNick: old, newNick: nickname});

@@ -3,14 +3,20 @@
     <script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/chat_client.js"></script>
+    <script src="/js.cookie.js"></script>
     <link rel="stylesheet" href="/style.css"></link>
     </head>
     <body>
         <div id="roomListDiv">
+            <div>
+                <h2 id="roomListHeader">Rooms</h2>
+                <button style='display:inline-block' onclick="createRoom()">Create room</button>
+            </div>
             <ul id="roomList">
             </ul>
         </div>
         <div id="chatDiv">
+            <h1 id=roomNameHeader></h1><i id="roomDesc"></i>
             <div id="messageDiv">
             </div>
             <div id="composeDiv">
@@ -20,7 +26,7 @@
         <div id="controlDiv">
             <input id="nickBox"></input>
             <button onclick="sendNick()">Change Nickname</button>
-            <button onclick="createRoom()">Create room</button>
+            <br>
         </div>
         </div>
     </body>

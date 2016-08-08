@@ -1,7 +1,21 @@
 var socket = io();
 
-var activeRoom = "lobby";;
-socket.emit('join', {room: "lobby"});
+var activeRoom = "lobby";
+$(document).ready(function() {
+    socket.emit('join', {room: "lobby"});
+
+    var nickName = Cookies.get("didactichatNickname");
+    if (nickName === undefined) {
+        nickName = "";
+        while (nickName === null) {
+            nickName = window.prompt("Enter your nickname (can't be blank)");
+        }
+        Cookies.set("didactichatNickname", nickName, {expires: 7});
+    }
+
+    socket.emit("NICK", nickName);
+
+});
 
 function sendMessage() {
     var msgBox = $("#composeBox");
@@ -16,8 +30,9 @@ function sendNick() {
 };
 
 function createRoom() {
-    var room = window.prompt("Enter room name");
-    if (room !== "") {
+    var room;
+    room = window.prompt("Enter room name");
+    if (room !== null && room !== "") {
         socket.emit('join', {room: room});
     }
 }
@@ -38,12 +53,14 @@ socket.on('text message', function(message) {
 });
 
 socket.on('NICK', function(nickChange) {
-    var changeStr = nickChange.oldNick + " is now known as " + nickChange.newNick + ".";
-    addTextToMsgWindow(changeStr);
+    if (nickChange.oldNick !== null) {
+        var changeStr = nickChange.oldNick + " is now known as " + nickChange.newNick + ".";
+        addTextToMsgWindow(changeStr);
+    }
 });
 
 socket.on('room create', function(newRoom) {
-    $('#roomList').append("<li id=" + newRoom + "list><a>" + newRoom + "</a></li>");
+    $('#roomList').append("<li class='clickable' id=" + newRoom + "list><a>" + newRoom + "</a></li>");
     $('#messageDiv').append("<ul id="+ newRoom + "></ul>");
     if ($('#messageDiv').children().length > 1) {
         $('#'+newRoom).hide();
@@ -58,7 +75,7 @@ socket.on('room create', function(newRoom) {
 
 socket.on('room list', function(roomList) {
     for (var i = 0; i < roomList.length; i++) {
-        $('#roomList').append("<li id=" + roomList[i]+"list>" + roomList[i] + "</li>");
+        $('#roomList').append("<li class='clickable' id=" + roomList[i]+"list>" + roomList[i] + "</li>");
         $('#messageDiv').append("<ul id="+roomList[i] + "></ul>");
         addRoomClickHandler(roomList[i]);
         socket.emit('join', {room: roomList[i]});
