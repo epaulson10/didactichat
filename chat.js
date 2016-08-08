@@ -36,12 +36,21 @@ io.on('connection', function(socket) {
     });
 
     socket.on('join', function (joinRequest) {
+        if (!joinRequest || joinRequest.room == undefined || joinRequest.room === ""
+            || joinRequest.room === null) {
+                return;
+            }
+
         console.log("Request to join room: " + joinRequest.room);
         socket.join(joinRequest.room);
-        if (roomList.indexOf(joinRequest.room) === -1) {
+        if (!roomList.some(function(room) {
+            if (room.room === joinRequest.room) return true;
+            return false;
+        })) {
             console.log("Creating room: " + joinRequest.room);
-            roomList.push(joinRequest.room);
-            io.emit('room create', joinRequest.room);
+            var roomObj = {room: joinRequest.room, desc: joinRequest.desc};
+            roomList.push(roomObj);
+            io.emit('room create', roomObj);
         }
     });
 });

@@ -1,8 +1,11 @@
 var socket = io();
 
-var activeRoom = "lobby";
+var activeRoom = "Lobby";
+
+var descriptionMap = {};
 $(document).ready(function() {
-    socket.emit('join', {room: "lobby"});
+    // On document ready, the activeRoom will be Lobby
+    socket.emit('join', {room: activeRoom, desc: "The purgatory of chat-rooms"});
 
     var nickName = Cookies.get("didactichatNickname");
     if (nickName === undefined) {
@@ -14,7 +17,7 @@ $(document).ready(function() {
     }
 
     socket.emit("NICK", nickName);
-
+    updateTitle();
 });
 
 function sendMessage() {
@@ -33,12 +36,24 @@ function createRoom() {
     var room;
     room = window.prompt("Enter room name");
     if (room !== null && room !== "") {
-        socket.emit('join', {room: room});
+        if(!checkStr(room)) return;
+        var desc = window.prompt("Enter a description of this room (not required)");
+        socket.emit('join', {room: room, desc: desc});
     }
+}
+
+function checkStr(str) {
+    if(/^[a-zA-Z0-9-_]+$/.test(str) == false) {
+        alert("Only alphanumeric characters and -, _ allowed");
+        return false;
+    };
+    return true;
 }
 
 function addRoomClickHandler(room) {
     $('#'+room + "list").click(function() {
+        if ($(this).text() === activeRoom) return;
+
         $(this).css('color', 'blue');
         $('#'+activeRoom + "list").css('color', 'black');
         $('#'+activeRoom).hide();
@@ -59,45 +74,62 @@ socket.on('NICK', function(nickChange) {
     }
 });
 
-socket.on('room create', function(newRoom) {
-    $('#roomList').append("<li class='clickable' id=" + newRoom + "list><a>" + newRoom + "</a></li>");
-    $('#messageDiv').append("<ul id="+ newRoom + "></ul>");
+socket.on('room create', function(newRoomObj) {
+    var roomName = newRoomObj.room;
+    var desc = newRoomObj.desc;
+    $('#roomList').append("<li class='clickable' id=" + roomName+ "list><a>" + roomName + "</a></li>");
+    $('#messageDiv').append("<ul id="+ roomName + "></ul>");
     if ($('#messageDiv').children().length > 1) {
-        $('#'+newRoom).hide();
+        $('#'+roomName).hide();
     } else {
-        $('#'+newRoom + "list").css('color', 'blue');
+        $('#'+roomName + "list").css('color', 'blue');
     }
-
-    socket.emit('join', {room: newRoom});
-    addRoomClickHandler(newRoom);
+    descriptionMap[roomName] = desc;
+    updateTitle();
+    socket.emit('join', {room: roomName});
+    addRoomClickHandler(roomName);
 });
 
 
 socket.on('room list', function(roomList) {
     for (var i = 0; i < roomList.length; i++) {
-        $('#roomList').append("<li class='clickable' id=" + roomList[i]+"list>" + roomList[i] + "</li>");
-        $('#messageDiv').append("<ul id="+roomList[i] + "></ul>");
-        addRoomClickHandler(roomList[i]);
-        socket.emit('join', {room: roomList[i]});
+        var roomName= roomList[i].room;
+        var desc = roomList[i].desc;
+        descriptionMap[roomName] = desc;
+
+        $('#roomList').append("<li class='clickable' id=" + roomName+"list>" + roomName + "</li>");
+        $('#messageDiv').append("<ul id="+ roomName + "></ul>");
+        addRoomClickHandler(roomName);
+        socket.emit('join', {room: roomName, desc: desc});
         if (i == 0) {
-            $('#' + roomList[i] + 'list').css('color','blue');
+            $('#' + roomName + 'list').css('color','blue');
         } else {
-            $('#' + roomList[i]).hide();
+            $('#' + roomName).hide();
         }
-        getMessagesForRoom(roomList[i], 20);
+        updateTitle();
+        getMessagesForRoom(roomName, 20);
     }
 });
+
+
+function updateTitle() {
+    var textToDisplay = activeRoom;
+    if (descriptionMap[activeRoom] !== null && descriptionMap[activeRoom] !== "") {
+        textToDisplay = textToDisplay+": <em>"+descriptionMap[activeRoom]+"</em>";
+    }
+    $('#roomNameHeader').html(textToDisplay);
+}
 
 function getMessagesForRoom(room, numMessages) {
     $.get("/chat/log", {numMessages: numMessages, room: room}, 
         function(messageArr) {
             for (var i = 0; i < messageArr.length; i++) {
-                addTextToMsgWindow(messageArr[i].from + ": " + messageArr[i].message, room);
+                addTextToMsgWindow(messageArr[i].from + ": " + messageArr[i].message, room, true);
             }
         });
 };
 
-function addTextToMsgWindow(text, room) {
+function addTextToMsgWindow(text, room, isChatHistory = false) {
     var msgList;
     var roomListElem;
     if (room === undefined) {
@@ -109,7 +141,8 @@ function addTextToMsgWindow(text, room) {
         msgList = $('#' + room);
         roomListElem = $('#' + room + 'list');
     }
-    if (room != activeRoom) {
+    
+    if (!isChatHistory && room != activeRoom) {
         roomListElem.css('color', 'red');
     }
     var msgDiv = $('#messageDiv');
