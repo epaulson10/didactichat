@@ -9,7 +9,7 @@ $(document).ready(function() {
 
     var nickName = Cookies.get("didactichatNickname");
     if (nickName === undefined || nickName === null || nickName === "") {
-        nickName = "";
+        nickName = null;
         while (nickName === null) {
             nickName = window.prompt("Enter your nickname (can't be blank)");
         }
