@@ -8,11 +8,11 @@ var chatLog = require('../chat_log.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+    res.redirect('/chat');
 });
 
 router.get('/chat', function (req, res, next) {
-    res.sendfile('public/chat.html');
+    res.sendFile('public/chat.html', {root: __dirname + '/..'});
 });
 
 router.get('/chat/log', function (req, res) {
