@@ -8,7 +8,7 @@ $(document).ready(function() {
     socket.emit('join', {room: activeRoom, desc: "The purgatory of chat-rooms"});
 
     var nickName = Cookies.get("didactichatNickname");
-    if (nickName === undefined) {
+    if (nickName === undefined || nickName === null) {
         nickName = "";
         while (nickName === null) {
             nickName = window.prompt("Enter your nickname (can't be blank)");
@@ -59,6 +59,7 @@ function addRoomClickHandler(room) {
         $('#'+activeRoom).hide();
         activeRoom = $(this).text();
         $('#'+activeRoom).show();
+        updateTitle();
     });
 }
 
