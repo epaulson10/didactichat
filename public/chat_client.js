@@ -8,7 +8,7 @@ $(document).ready(function() {
     socket.emit('join', {room: activeRoom, desc: "The purgatory of chat-rooms"});
 
     var nickName = Cookies.get("didactichatNickname");
-    if (nickName === undefined || nickName === null) {
+    if (nickName === undefined || nickName === null || nickName === "") {
         nickName = "";
         while (nickName === null) {
             nickName = window.prompt("Enter your nickname (can't be blank)");
@@ -28,6 +28,7 @@ function sendMessage() {
 
 function sendNick() {
     var nickBox = $('#nickBox');
+    Cookies.set("didactichatNickname", nickBox.val(), {expires: 7});
     socket.emit('NICK', nickBox.val());
     nickBox.val('');
 };
