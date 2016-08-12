@@ -22,7 +22,7 @@ var chatLog = require('../chat_log.js');
 
 var testMessage = {msg: "hello, world", from: "A user", room: "lobby", time: new Date().getTime()};
 
-describe("API tests", function() {
+describe("Chat log API tests", function() {
     describe("addMessage", function() {
         it("should add a message without error", function() {
             chatLog.addMessage(testMessage);

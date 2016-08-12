@@ -81,7 +81,7 @@ describe('Chat Protocol Tests', function() {
 
     it('should broadcast NICK updates in the chat', function(done) {
         client2.on('NICK', function(data) {
-            should(data).have.property('oldNick').which.is.equal('Anonymous');
+            should(data).have.property('oldNick').which.is.null;
             should(data).have.property('newNick').which.is.equal('Steve');
             done();
         });
