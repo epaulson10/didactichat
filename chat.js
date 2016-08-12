@@ -20,12 +20,12 @@ var http = require('http');
 var chat = {};
 var io = require('socket.io')();
 var chatLog = require('./chat_log.js');
+var sanitizer = require('sanitizer');
 chat.io = io;
 
 var roomList = [];
 
 io.on('connection', function(socket) {
-    console.log("Someone connected");
     socket.nick = null;
     socket.room = "chat";
     socket.emit('room list', roomList);
@@ -37,13 +37,13 @@ io.on('connection', function(socket) {
                 return;
         }
         var old = socket.nick;
-        socket.nick = nickname;
-        io.emit('NICK', {oldNick: old, newNick: nickname});
+        socket.nick = sanitizer.escape(nickname);
+        io.emit('NICK', {oldNick: old, newNick: socket.nick});
     });
 
     socket.on('text message', function(textMsg) {
-        console.log("Received message: \"" +textMsg.message + "\" for room: " + textMsg.room);
-        var msgObj = {from: socket.nick, message: textMsg.message, room: textMsg.room};
+        var msgObj = {from: socket.nick, message: sanitizer.escape(textMsg.message), 
+            room: sanitizer.escape(textMsg.room)};
         if(textMsg.room){
             io.sockets.in(textMsg.room).emit('text message', msgObj);
         }
@@ -59,13 +59,13 @@ io.on('connection', function(socket) {
                 return;
             }
 
-        console.log("Request to join room: " + joinRequest.room);
+        joinRequest.room = sanitizer.escape(joinRequest.room);
+        joinRequest.desc = sanitizer.escape(joinRequest.desc);
         socket.join(joinRequest.room);
         if (!roomList.some(function(room) {
             if (room.room === joinRequest.room) return true;
             return false;
         })) {
-            console.log("Creating room: " + joinRequest.room);
             var roomObj = {room: joinRequest.room, desc: joinRequest.desc};
             roomList.push(roomObj);
             io.emit('room create', roomObj);
